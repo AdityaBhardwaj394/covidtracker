@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        td{
+            border: 2px solid black;
+            
+        }
+        tr:nth-child(odd){
+            border: 2px solid rgb(200, 29, 29);
+            
+        }
+         /* table{
+            margin: auto 550px;
+            
+            /* border: 2px solid red; */
+        
+        /* chart js */
+        /* event listener */
+        /* svg path */
+        /* inforgraphics */
+        /* css one v one */
+    </style>
+</head>
+<body>
+    <table id="data">
+        <tr>
+            <th>state</th>
+            <th>total confirmed cases</th>
+        </tr>
+
+
+
+    </table>
+    <script>
+        fetch("https://api.rootnet.in/covid19-in/stats/latest").then((res)=>res.json()).then(resp=>{
+            console.log(resp)
+            let table=document.getElementById("data")
+            //  value= resp.data.regional[index].totalConfirmed;
+            //  key= resp.data.regional[index].loc;
+        //      resp= resp.sort(function (a, b) {
+        //        return a.data.regional.totalConfirmed( b.totalConfirmed );
+        //    });
+           for (let i = 0; i < resp.data.regional.length; i++) {
+              
+              for (let j = 0; j <resp.data.regional.length-i-1; j++) {
+                if(resp.data.regional[j].totalConfirmed<resp.data.regional[j+1].totalConfirmed){
+                    let temp=resp.data.regional[j];
+                    resp.data.regional[j]=resp.data.regional[j+1]
+                    resp.data.regional[j+1]=temp
+                }
+                
+              }
+            
+           }
+           resp.data.regional.sort((state1,state2)=>{
+            return state2.totalConfirmed-state1.totalConfirmed;
+           })
+
+
+            for (let index = 0; index < resp.data.regional.length; index++) {
+                const element = resp?.data?.regional[index];
+                               
+
+                let newRow=document.createElement("tr")
+                let newstated=document.createElement("td")
+                let newtcctd=document.createElement("td")
+                let statenode=document.createTextNode(element.loc)
+                let tccnode=document.createTextNode(element.totalConfirmed)
+                newstated.appendChild(statenode)
+                newtcctd.appendChild(tccnode)
+                newRow.appendChild(newstated);
+                newRow.appendChild(newtcctd);
+                table.appendChild(newRow)
+
+                
+            }
+        })
+    </script>
+</body>
+</html>
